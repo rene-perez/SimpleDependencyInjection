@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,18 @@ namespace SimpleDependencyInjection
 		{
 			var builder = new ContainerBuilder();
 			builder.RegisterType<ConsoleOutput>().As<IOutput>();
-			builder.RegisterType<TodayWriter>().As<IDateWriter>();
+			builder.RegisterType<TodayWriter>();
+			builder.RegisterType<TodayWriter2>();
+			builder.Register<IDateWriter>(c =>
+			{
+				string writerType = ConfigurationManager.AppSettings["Writer"];
+				if (writerType.Equals("1", StringComparison.OrdinalIgnoreCase))
+				{
+					return c.Resolve<TodayWriter>();
+				}
+				else
+					return c.Resolve<TodayWriter2>();
+			});
 			Container = builder.Build();
 
 			// The WriteDate method is where we'll make use

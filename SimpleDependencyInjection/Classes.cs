@@ -56,4 +56,18 @@ namespace SimpleDependencyInjection
 			this._output.Write(DateTime.Today.ToShortDateString());
 		}
 	}
+
+	public class TodayWriter2 : IDateWriter
+	{
+		private IOutput _output;
+		public TodayWriter2(IOutput output)
+		{
+			this._output = output;
+		}
+
+		public void WriteDate()
+		{
+			this._output.Write(DateTime.Today.ToString());
+		}
+	}
 }
